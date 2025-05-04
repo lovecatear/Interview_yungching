@@ -91,19 +91,85 @@ DELETE /api/products/{id}     # 刪除產品
 ```
 ProductHub/
 ├── ProductHub.Server/           # 後端 API 專案
-├── ProductHub.Business/      # 業務邏輯層
-├── ProductHub.Data/          # 資料存取層
-├── ProductHub.Common/        # 共用元件
-├── ProductHub.Tests/         # 單元測試專案
-└── ProductHub.client/           # React 前端專案
+│   ├── Controllers/            # API 控制器
+│   ├── Middlewares/           # 自訂中介軟體
+│   ├── Filters/               # 動作過濾器
+│   ├── Extensions/            # 擴充方法
+│   └── Configurations/        # 應用程式配置
+├── ProductHub.Business/        # 業務邏輯層
+│   ├── Services/              # 業務邏輯服務實作
+│   ├── Interfaces/            # 服務介面定義
+│   ├── DTOs/                  # 資料傳輸物件
+│   ├── Validators/            # 資料驗證邏輯
+│   └── Mappings/              # 物件對應配置
+├── ProductHub.Data/           # 資料存取層
+│   ├── Contexts/              # Entity Framework Core 資料庫上下文
+│   ├── Repositories/          # 資料存取實作
+│   ├── Configurations/        # Entity Framework 實體配置
+│   ├── Migrations/            # 資料庫遷移檔案
+│   └── Seeders/               # 資料庫種子資料
+├── ProductHub.Common/         # 共用元件
+│   ├── Models/                # 共用模型類別
+│   ├── Interfaces/            # 共用介面定義
+│   ├── Constants/             # 常數定義
+│   ├── Extensions/            # 擴充方法
+│   └── Helpers/               # 輔助類別
+├── ProductHub.Tests/          # 單元測試專案
+│   ├── UnitTests/             # 單元測試
+│   ├── IntegrationTests/      # 整合測試
+│   └── TestData/              # 測試資料
+└── ProductHub.client/         # React 前端專案
     ├── src/
-    │   ├── components/      # React 元件
-    │   ├── pages/          # 頁面元件
-    │   ├── services/       # API 服務
-    │   ├── store/          # Redux store
-    │   └── utils/          # 工具函數
-    └── public/             # 靜態資源
+    │   ├── components/        # React 元件
+    │   ├── pages/            # 頁面元件
+    │   ├── services/         # API 服務
+    │   ├── store/            # Redux store
+    │   └── utils/            # 工具函數
+    └── public/               # 靜態資源
 ```
+
+### 6.1 專案職責說明
+
+#### 6.1.1 ProductHub.Common
+- **Models**: 定義共用的資料模型，如基礎實體類別、共用 DTO 等
+- **Interfaces**: 定義共用的介面，如基礎儲存庫介面、服務介面等
+- **Constants**: 定義系統中使用的常數值
+- **Extensions**: 提供擴充方法，如字串處理、集合操作等
+- **Helpers**: 提供共用的輔助類別，如日期處理、加密解密等
+
+#### 6.1.2 ProductHub.Data
+- **Contexts**: 定義 Entity Framework Core 的資料庫上下文
+- **Repositories**: 實作資料存取邏輯，包含 CRUD 操作
+- **Configurations**: 定義 Entity Framework 的實體配置
+- **Migrations**: 存放資料庫遷移檔案
+- **Seeders**: 提供資料庫初始資料的種子資料
+
+#### 6.1.3 ProductHub.Business
+- **Services**: 實作業務邏輯，處理複雜的業務規則
+- **Interfaces**: 定義服務介面，遵循依賴反轉原則
+- **DTOs**: 定義資料傳輸物件，用於層級間的資料傳遞
+- **Validators**: 實作資料驗證邏輯，確保資料正確性
+- **Mappings**: 定義物件對應配置，處理不同層級間的物件轉換
+
+#### 6.1.4 ProductHub.Server
+- **Controllers**: 實作 API 端點，處理 HTTP 請求
+- **Middlewares**: 實作自訂中介軟體，如請求日誌、錯誤處理等
+- **Filters**: 實作動作過濾器，如授權、驗證等
+- **Extensions**: 提供應用程式相關的擴充方法
+- **Configurations**: 定義應用程式配置，如服務註冊、中介軟體配置等
+
+#### 6.1.5 ProductHub.Tests
+- **UnitTests**: 實作單元測試，測試個別元件功能
+- **IntegrationTests**: 實作整合測試，測試多個元件的互動
+- **TestData**: 提供測試用的模擬資料
+
+### 6.2 設計原則
+- 遵循 SOLID 原則
+- 實作依賴注入
+- 採用介面優先設計
+- 實作單元測試
+- 使用非同步程式設計
+- 實作適當的錯誤處理機制
 
 ## 7. 開發規範
 ### 7.1 版本控制

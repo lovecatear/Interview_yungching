@@ -20,6 +20,7 @@
     <ProjectReference Include="..\producthub.client\producthub.client.esproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+    <ProjectReference Include="..\ProductHub.Business\ProductHub.Business.csproj" />
   </ItemGroup>
 
   <ItemGroup>
