@@ -78,7 +78,7 @@ DELETE /api/products/{id}     # 刪除產品
 ### 5.1 產品表（Products）
 | 欄位名稱 | 資料型別 | 說明 |
 |---------|---------|------|
-| Id | INT | 主鍵，自動遞增 |
+| Id | UNIQUEIDENTIFIER | 主鍵，GUID |
 | Name | NVARCHAR(100) | 產品名稱 |
 | Description | NVARCHAR(500) | 產品描述 |
 | Price | DECIMAL(18,2) | 產品價格 |
