@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ProductHub.Common.Models;
+using ProductHub.Data.Seeders;
 
 namespace ProductHub.Data.Contexts;
 
@@ -32,9 +33,55 @@ public class ProductHubContext : DbContext
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.Property(e => e.Name).HasMaxLength(100).IsRequired();
-            entity.Property(e => e.Description).HasMaxLength(500);
-            entity.Property(e => e.Price).HasPrecision(18, 2);
+            // Primary key
+            entity.HasKey(e => e.Id);
+
+            // Required fields
+            entity.Property(e => e.Name)
+                .HasMaxLength(100)
+                .IsRequired();
+
+            entity.Property(e => e.Description)
+                .HasMaxLength(500)
+                .IsRequired();
+
+            // Decimal precision
+            entity.Property(e => e.Price)
+                .HasPrecision(18, 2)
+                .IsRequired();
+
+            // Integer constraints
+            entity.Property(e => e.Stock)
+                .IsRequired();
+
+            // DateTime defaults
+            entity.Property(e => e.CreateTime)
+                .IsRequired();
+
+            entity.Property(e => e.UpdateTime)
+                .IsRequired();
+
+            // Boolean default
+            entity.Property(e => e.IsActive)
+                .IsRequired();
+
+            // Indexes
+            entity.HasIndex(e => e.Name);
+            entity.HasIndex(e => e.IsActive);
         });
+    }
+
+    /// <summary>
+    /// Executes when database is created
+    /// </summary>
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        // Execute seeder on first save
+        if (ChangeTracker.HasChanges())
+        {
+            await ProductSeeder.SeedAsync(this);
+        }
+
+        return await base.SaveChangesAsync(cancellationToken);
     }
 } 

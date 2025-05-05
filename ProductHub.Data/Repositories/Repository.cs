@@ -9,8 +9,8 @@ namespace ProductHub.Data.Repositories;
 /// <summary>
 /// Generic repository implementation for database operations
 /// </summary>
-/// <typeparam name="T">Entity type that inherits from BaseEntity</typeparam>
-public class Repository<T>(ProductHubContext context) : IRepository<T> where T : BaseEntity
+/// <typeparam name="T">Entity type that inherits from Product</typeparam>
+public class Repository<T>(ProductHubContext context) : IRepository<T> where T : Product
 {
     /// <summary>
     /// Database context instance

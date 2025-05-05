@@ -3,25 +3,45 @@ namespace ProductHub.Common.Models;
 /// <summary>
 /// Represents a product in the system
 /// </summary>
-public class Product : BaseEntity
+public class Product
 {
     /// <summary>
-    /// Name of the product
+    /// Unique identifier for the product
+    /// </summary>
+    public Guid Id { get; set; }
+
+    /// <summary>
+    /// Product name
     /// </summary>
     public string Name { get; set; } = string.Empty;
 
     /// <summary>
-    /// Detailed description of the product
+    /// Product description
     /// </summary>
     public string Description { get; set; } = string.Empty;
 
     /// <summary>
-    /// Price of the product
+    /// Product price
     /// </summary>
     public decimal Price { get; set; }
 
     /// <summary>
-    /// Current stock quantity of the product
+    /// Current stock quantity
     /// </summary>
     public int Stock { get; set; }
+
+    /// <summary>
+    /// Creation timestamp
+    /// </summary>
+    public DateTime CreateTime { get; set; }
+
+    /// <summary>
+    /// Last update timestamp
+    /// </summary>
+    public DateTime UpdateTime { get; set; }
+
+    /// <summary>
+    /// Product active status
+    /// </summary>
+    public bool IsActive { get; set; } = true;
 }

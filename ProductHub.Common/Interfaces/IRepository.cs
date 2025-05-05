@@ -6,8 +6,8 @@ namespace ProductHub.Common.Interfaces;
 /// <summary>
 /// Generic repository interface defining basic CRUD operations
 /// </summary>
-/// <typeparam name="T">Entity type that inherits from BaseEntity</typeparam>
-public interface IRepository<T> where T : BaseEntity
+/// <typeparam name="T">Entity type that inherits from Product</typeparam>
+public interface IRepository<T> where T : Product
 {
     /// <summary>
     /// Retrieves an entity by its ID
