@@ -14,6 +14,12 @@
     <PackageReference Include="Microsoft.AspNetCore.SpaProxy">
       <Version>8.*-*</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer">
+      <Version>8.0.2</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
+      <Version>8.0.2</Version>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
@@ -22,6 +28,7 @@
     </ProjectReference>
     <ProjectReference Include="..\ProductHub.Business\ProductHub.Business.csproj" />
     <ProjectReference Include="..\ProductHub.Common\ProductHub.Common.csproj" />
+    <ProjectReference Include="..\ProductHub.Data\ProductHub.Data.csproj" />
   </ItemGroup>
 
   <ItemGroup>
