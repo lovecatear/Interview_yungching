@@ -10,6 +10,8 @@ using ProductHub.Data.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCustomCors(builder.Configuration, builder.Environment);
+
 builder.Services.AddDbContext<ProductHubContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ProductHubSqlConnection")));
 
@@ -32,6 +34,8 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwaggerDocumentation();
 }
+
+app.UseCors();
 
 app.UseHttpsRedirection();
 
