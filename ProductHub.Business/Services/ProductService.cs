@@ -1,18 +1,15 @@
 using ProductHub.Business.Interfaces;
-using ProductHub.Common.Interfaces;
 using ProductHub.Common.Models;
+using ProductHub.Data.Interfaces;
 
 namespace ProductHub.Business.Services;
 
 /// <summary>
 /// Implementation of the product service interface
 /// </summary>
-public class ProductService(IRepository<Product> repository) : IProductService
+public class ProductService(IProductRepository productRepository) : IProductService
 {
-    /// <summary>
-    /// Repository instance for product data access
-    /// </summary>
-    private readonly IRepository<Product> _repository = repository;
+    private readonly IProductRepository _productRepository = productRepository;
 
     /// <summary>
     /// Retrieves a product by its ID
@@ -21,7 +18,7 @@ public class ProductService(IRepository<Product> repository) : IProductService
     /// <returns>The product if found, null otherwise</returns>
     public async Task<Product?> GetByIdAsync(Guid id)
     {
-        return await _repository.GetByIdAsync(id);
+        return await _productRepository.GetByIdAsync(id);
     }
 
     /// <summary>
@@ -30,7 +27,7 @@ public class ProductService(IRepository<Product> repository) : IProductService
     /// <returns>A collection of all products</returns>
     public async Task<IEnumerable<Product>> GetAllAsync()
     {
-        return await _repository.GetAllAsync();
+        return await _productRepository.GetAllAsync();
     }
 
     /// <summary>
@@ -40,27 +37,43 @@ public class ProductService(IRepository<Product> repository) : IProductService
     /// <returns>The created product with its ID</returns>
     public async Task<Product> CreateAsync(Product product)
     {
-        return await _repository.AddAsync(product);
+        product.Id = Guid.NewGuid();
+        product.CreateTime = DateTime.UtcNow;
+        product.UpdateTime = DateTime.UtcNow;
+        product.IsActive = true;
+        return await _productRepository.AddAsync(product);
     }
 
     /// <summary>
     /// Updates an existing product
     /// </summary>
+    /// <param name="id">The ID of the product to update</param>
     /// <param name="product">The product to update</param>
-    /// <returns>A task representing the update operation</returns>
-    public async Task UpdateAsync(Product product)
+    /// <returns>The updated product if found, null otherwise</returns>
+    public async Task<Product> UpdateAsync(Guid id, Product product)
     {
-        await _repository.UpdateAsync(product);
+        var existingProduct = await _productRepository.GetByIdAsync(id);
+        if (existingProduct == null)
+            throw new ArgumentException($"Product with ID {id} not found");
+
+        product.Id = id;
+        product.CreateTime = existingProduct.CreateTime;
+        product.UpdateTime = DateTime.UtcNow;
+        return await _productRepository.UpdateAsync(product);
     }
 
     /// <summary>
     /// Deletes a product by its ID
     /// </summary>
     /// <param name="id">The ID of the product to delete</param>
-    /// <returns>A task representing the delete operation</returns>
-    public async Task DeleteAsync(Guid id)
+    /// <returns>True if the product was deleted, false otherwise</returns>
+    public async Task<bool> DeleteAsync(Guid id)
     {
-        await _repository.DeleteAsync(id);
+        var product = await _productRepository.GetByIdAsync(id);
+        if (product == null)
+            return false;
+
+        return await _productRepository.DeleteAsync(product);
     }
 
     /// <summary>
@@ -70,6 +83,7 @@ public class ProductService(IRepository<Product> repository) : IProductService
     /// <returns>True if the product exists, false otherwise</returns>
     public async Task<bool> ExistsAsync(Guid id)
     {
-        return await _repository.ExistsAsync(id);
+        var product = await _productRepository.GetByIdAsync(id);
+        return product != null;
     }
 }

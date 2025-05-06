@@ -139,7 +139,7 @@ public class ProductsController(IProductService productService) : ControllerBase
                 return NotFound(new { message = $"Product with ID {id} not found" });
             }
 
-            await productService.UpdateAsync(product);
+            await productService.UpdateAsync(id, product);
             var updatedProduct = await productService.GetByIdAsync(id);
             return Ok(new
             {
@@ -154,14 +154,10 @@ public class ProductsController(IProductService productService) : ControllerBase
     }
 
     /// <summary>
-    /// Deletes a product from the system
+    /// Deletes a product by ID
     /// </summary>
-    /// <param name="id">The unique identifier of the product to delete</param>
-    /// <returns>Information about the deleted product</returns>
-    /// <response code="200">Returns the deletion confirmation</response>
-    /// <response code="400">If the product ID is invalid</response>
-    /// <response code="404">If the product is not found</response>
-    /// <response code="500">If there was an internal server error</response>
+    /// <param name="id">Product ID</param>
+    /// <returns>Success message or error details</returns>
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -183,13 +179,7 @@ public class ProductsController(IProductService productService) : ControllerBase
             }
 
             await productService.DeleteAsync(id);
-            return Ok(new
-            {
-                message = "Product deleted successfully",
-                deletedProductId = id,
-                deletedProductName = product.Name,
-                deletedAt = DateTime.UtcNow
-            });
+            return Ok(new { message = "Product deleted successfully", productId = id });
         }
         catch (Exception ex)
         {

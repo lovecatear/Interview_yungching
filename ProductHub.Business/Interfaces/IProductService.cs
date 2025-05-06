@@ -30,16 +30,17 @@ public interface IProductService
     /// <summary>
     /// Updates an existing product
     /// </summary>
+    /// <param name="id">The ID of the product to update</param>
     /// <param name="product">The product to update</param>
-    /// <returns>A task representing the update operation</returns>
-    Task UpdateAsync(Product product);
+    /// <returns>The updated product</returns>
+    Task<Product> UpdateAsync(Guid id, Product product);
 
     /// <summary>
     /// Deletes a product by its ID
     /// </summary>
     /// <param name="id">The ID of the product to delete</param>
-    /// <returns>A task representing the delete operation</returns>
-    Task DeleteAsync(Guid id);
+    /// <returns>True if the product was deleted, false otherwise</returns>
+    Task<bool> DeleteAsync(Guid id);
 
     /// <summary>
     /// Checks if a product exists by its ID
