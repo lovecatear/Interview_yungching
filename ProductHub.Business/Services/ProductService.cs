@@ -31,6 +31,30 @@ public class ProductService(IProductRepository productRepository) : IProductServ
     }
 
     /// <summary>
+    /// Retrieves a paged list of products with filtering, sorting, and searching
+    /// </summary>
+    /// <param name="parameters">Query parameters for filtering, sorting, and pagination</param>
+    /// <returns>A paged result of products</returns>
+    public async Task<PagedResult<Product>> GetPagedAsync(ProductQueryParameters parameters)
+    {
+        // Validate parameters
+        if (parameters.PageNumber < 1)
+            parameters.PageNumber = 1;
+
+        if (parameters.PageSize < 1)
+            parameters.PageSize = 10;
+
+        // Validate price range
+        if (parameters.MinPrice.HasValue && parameters.MaxPrice.HasValue &&
+            parameters.MinPrice.Value > parameters.MaxPrice.Value)
+        {
+            throw new ArgumentException("Minimum price cannot be greater than maximum price");
+        }
+
+        return await _productRepository.GetPagedAsync(parameters);
+    }
+
+    /// <summary>
     /// Creates a new product
     /// </summary>
     /// <param name="product">The product to create</param>

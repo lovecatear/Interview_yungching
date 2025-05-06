@@ -34,6 +34,40 @@ public class ProductsController(IProductService productService) : ControllerBase
     }
 
     /// <summary>
+    /// Retrieves a paged list of products with filtering, sorting, and searching
+    /// </summary>
+    /// <param name="parameters">Query parameters for filtering, sorting, and pagination</param>
+    /// <returns>A paged result of products</returns>
+    /// <response code="200">Returns the paged list of products</response>
+    /// <response code="400">If the query parameters are invalid</response>
+    /// <response code="500">If there was an internal server error</response>
+    [HttpGet("paged")]
+    [ProducesResponseType(typeof(PagedResult<Product>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<PagedResult<Product>>> GetPaged([FromQuery] ProductQueryParameters parameters)
+    {
+        try
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new { message = "Invalid query parameters", errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage) });
+            }
+
+            var result = await productService.GetPagedAsync(parameters);
+            return Ok(result);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "An error occurred while retrieving products", error = ex.Message });
+        }
+    }
+
+    /// <summary>
     /// Retrieves a specific product by its unique identifier
     /// </summary>
     /// <param name="id">The unique identifier of the product</param>
@@ -92,7 +126,7 @@ public class ProductsController(IProductService productService) : ControllerBase
 
             product.IsActive = true;
             var createdProduct = await productService.CreateAsync(product);
-            return CreatedAtAction(nameof(GetById), createdProduct);
+            return CreatedAtAction(nameof(GetById), new { id = createdProduct.Id }, createdProduct);
         }
         catch (Exception ex)
         {
@@ -172,14 +206,18 @@ public class ProductsController(IProductService productService) : ControllerBase
                 return BadRequest(new { message = "Invalid product ID" });
             }
 
-            var product = await productService.GetByIdAsync(id);
-            if (product == null)
+            if (!await productService.ExistsAsync(id))
             {
                 return NotFound(new { message = $"Product with ID {id} not found" });
             }
 
-            await productService.DeleteAsync(id);
-            return Ok(new { message = "Product deleted successfully", productId = id });
+            var result = await productService.DeleteAsync(id);
+            if (!result)
+            {
+                return StatusCode(500, new { message = "Failed to delete the product" });
+            }
+
+            return Ok(new { message = "Product deleted successfully" });
         }
         catch (Exception ex)
         {

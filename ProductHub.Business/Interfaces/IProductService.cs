@@ -21,6 +21,13 @@ public interface IProductService
     Task<IEnumerable<Product>> GetAllAsync();
 
     /// <summary>
+    /// Retrieves a paged list of products with filtering, sorting, and searching
+    /// </summary>
+    /// <param name="parameters">Query parameters for filtering, sorting, and pagination</param>
+    /// <returns>A paged result of products</returns>
+    Task<PagedResult<Product>> GetPagedAsync(ProductQueryParameters parameters);
+
+    /// <summary>
     /// Creates a new product
     /// </summary>
     /// <param name="product">The product to create</param>

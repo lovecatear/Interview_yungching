@@ -6,14 +6,18 @@ using ProductHub.Business.Services;
 using ProductHub.Common.Interfaces;
 using ProductHub.Common.Models;
 using ProductHub.Data.Repositories;
+using ProductHub.Data.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ProductHubContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ProductHubSqlConnection")));
 
+// Register repositories
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IRepository<Product>, Repository<Product>>();
 
+// Register services
 builder.Services.AddScoped<IProductService, ProductService>();
 
 builder.Services.AddControllers();
