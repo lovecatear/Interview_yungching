@@ -17,7 +17,6 @@ builder.Services.AddDbContext<ProductHubContext>(options =>
 
 // Register repositories
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped<IRepository<Product>, Repository<Product>>();
 
 // Register services
 builder.Services.AddScoped<IProductService, ProductService>();

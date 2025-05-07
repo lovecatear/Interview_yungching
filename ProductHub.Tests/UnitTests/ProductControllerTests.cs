@@ -191,6 +191,9 @@ namespace ProductHub.Tests.UnitTests
             _mockProductService.Setup(service => service.GetByIdAsync(productId))
                 .ReturnsAsync(product);
 
+            _mockProductService.Setup(service => service.ExistsAsync(productId))
+                .ReturnsAsync(true);
+
             _mockProductService.Setup(service => service.DeleteAsync(productId))
                 .ReturnsAsync(true);
 
@@ -198,7 +201,13 @@ namespace ProductHub.Tests.UnitTests
             var result = await _controller.Delete(productId);
 
             // Assert
-            Assert.IsType<NoContentResult>(result);
+            var okResult = Assert.IsType<OkObjectResult>(result.Result);
+            var returnValue = okResult.Value;
+            Assert.NotNull(returnValue);
+            Assert.Equal("Product deleted successfully", returnValue.GetType().GetProperty("message")?.GetValue(returnValue));
+            
+            // Verify that DeleteAsync was called exactly once with the correct ID
+            _mockProductService.Verify(service => service.DeleteAsync(productId), Times.Once);
         }
     }
 } 
